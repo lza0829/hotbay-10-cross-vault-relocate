@@ -1,7 +1,7 @@
 from __future__ import annotations
 from fastapi import APIRouter
 from pydantic import BaseModel
-from app.db import db
+from app.db import db, write_db
 
 router = APIRouter(tags=["设置"])
 
@@ -19,7 +19,7 @@ def get_settings():
 
 @router.post("/设置/营业日")
 def set_day(body: DayIn):
-    with db() as conn:
+    with write_db() as conn:
         conn.execute(
             "INSERT INTO settings(key, value) VALUES ('营业日', ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
             (body.营业日,),

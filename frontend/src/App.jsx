@@ -1,6 +1,7 @@
 import { NavLink, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Vaults from './pages/Vaults'
+import VaultMoves from './pages/VaultMoves'
 import Partitions from './pages/Partitions'
 import Migrates from './pages/Migrates'
 import Retention from './pages/Retention'
@@ -10,6 +11,7 @@ import Settings from './pages/Settings'
 const links = [
   ['/', '总览'],
   ['/片库间', '片库间'],
+  ['/改挂', '跨库改挂'],
   ['/分区册', '分区册'],
   ['/迁移', '冷热迁移'],
   ['/保留', '片龄保留'],
@@ -25,6 +27,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/片库间" element={<Vaults />} />
+          <Route path="/改挂" element={<VaultMoves />} />
           <Route path="/分区册" element={<Partitions />} />
           <Route path="/迁移" element={<Migrates />} />
           <Route path="/保留" element={<Retention />} />

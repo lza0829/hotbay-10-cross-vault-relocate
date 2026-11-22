@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import date
 from fastapi import HTTPException
-from app.db import db
+from app.db import db, write_db
 from app.services.core import now, partition_row
 
 
@@ -25,7 +25,7 @@ def list_destroys():
 def run_retention(policy_id: int, mode: str = "连目录销毁"):
     if mode not in ("连目录销毁", "只删元数据"):
         raise HTTPException(400, detail="销毁模式无效")
-    with db() as conn:
+    with write_db() as conn:
         pol = conn.execute("SELECT * FROM retention_policies WHERE id=? AND active=1", (policy_id,)).fetchone()
         if not pol:
             raise HTTPException(404, detail="保留策略不存在")

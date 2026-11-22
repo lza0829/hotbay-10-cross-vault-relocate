@@ -23,6 +23,9 @@ export const api = {
   migrates: () => req('/迁移'),
   startMigrate: (body) => req('/迁移', { method: 'POST', body: JSON.stringify(body) }),
   finishMigrate: (id, success = true) => req(`/迁移/${id}/完成`, { method: 'POST', body: JSON.stringify({ success }) }),
+  vaultMoves: () => req('/改挂'),
+  // 跨库改挂：request_id 做幂等键，超时重试同键只回放原回执，占用不会双计
+  moveVault: (body) => req('/改挂', { method: 'POST', body: JSON.stringify(body) }),
   policies: () => req('/保留策略'),
   destroys: () => req('/销毁流水'),
   runRetention: (body) => req('/保留执行', { method: 'POST', body: JSON.stringify(body) }),

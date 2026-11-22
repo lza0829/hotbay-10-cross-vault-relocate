@@ -1,6 +1,6 @@
 from __future__ import annotations
 from fastapi import HTTPException
-from app.db import db
+from app.db import db, write_db
 from app.services.core import now, require_tier, vault_partition_count
 
 
@@ -23,7 +23,9 @@ def list_partitions(conn=None):
 
 def create_partition(part_key: str, title: str, release_day: str, vault_id: int, tier: str, object_prefix: str, clips: list):
     tier = require_tier(tier)
-    with db() as conn:
+    # 与跨库改挂共用 BEGIN IMMEDIATE 串行点：容量校验与在册写入同事务，
+    # 并发登记/改挂不会把同一库算超、不会双在册。
+    with write_db() as conn:
         v = conn.execute("SELECT * FROM vaults WHERE id=?", (vault_id,)).fetchone()
         if not v or not v["active"]:
             raise HTTPException(400, detail="片库间不可用")

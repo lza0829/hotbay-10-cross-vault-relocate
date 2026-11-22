@@ -27,7 +27,7 @@ export default function Home() {
         <h2>片库间</h2>
         <ul className="plain">
           {o.片库间.map(v => (
-            <li key={v.id}>{v.name} · 额定 {v.capacity} · {v.active ? '启用' : '停用'}</li>
+            <li key={v.id}>{v.name} · 额定 {v.capacity} · 在册徽章 {v.在册分区数} · {v.active ? '启用' : '停用'}</li>
           ))}
         </ul>
         {o.最近互证 && (

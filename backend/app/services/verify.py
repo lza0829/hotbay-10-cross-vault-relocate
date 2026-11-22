@@ -1,6 +1,6 @@
 from __future__ import annotations
 import json
-from app.db import db
+from app.db import db, write_db
 from app.services.core import now
 
 
@@ -10,7 +10,7 @@ def inventory_list():
 
 
 def run_verify():
-    with db() as conn:
+    with write_db() as conn:
         meta_keys = {
             r["object_key"]: r["bytes"]
             for r in conn.execute(

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from fastapi import APIRouter
 from app.db import db
+from app.services.core import vault_partition_count
 
 router = APIRouter(tags=["总览"])
 
@@ -22,5 +23,13 @@ def overview():
             "最近互证": (
                 lambda r: dict(r) if r else None
             )(conn.execute("SELECT status, drift_count, created_at FROM verify_runs ORDER BY id DESC LIMIT 1").fetchone()),
-            "片库间": [dict(x) for x in conn.execute("SELECT id, name, capacity, active FROM vaults ORDER BY id").fetchall()],
+            "片库间": [
+                {
+                    **dict(x),
+                    "在册分区数": vault_partition_count(conn, x["id"]),
+                }
+                for x in conn.execute(
+                    "SELECT id, name, capacity, active FROM vaults ORDER BY id"
+                ).fetchall()
+            ],
         }
